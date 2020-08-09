@@ -99,3 +99,7 @@ class UserTransactionHistory(AutoDateMixin, models.Model):
         related_name='participants',
     )
     payment_type = models.CharField('Тип перевода', max_length=5, choices=PAYMENT_TYPE_CHOICES)
+
+    class Meta:
+        verbose_name = 'История операций'
+        verbose_name_plural = 'История операций'
