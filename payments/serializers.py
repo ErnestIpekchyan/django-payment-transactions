@@ -48,8 +48,16 @@ class PaymentTransactionSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         request = self.context['request']
-        sender_account = validated_data['sender_account']
+
+        payment = PaymentTransaction.objects.create(**validated_data)
+        UserTransactionHistory.objects.create(
+            user=request.user, payment=payment, payment_type=UserTransactionHistory.DEBIT,
+        )
+
         recipient_account = validated_data['recipient_account']
+        UserTransactionHistory.objects.create(
+            user=recipient_account.user, payment=payment, payment_type=UserTransactionHistory.ADD,
+        )
 
     def validate(self, attrs):
         request = self.context['request']
