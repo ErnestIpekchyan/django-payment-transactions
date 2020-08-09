@@ -102,6 +102,13 @@ class PaymentTransactionSerializer(serializers.ModelSerializer):
         if sender_account.currency == recipient_account.currency:
             return transfer_amount
 
+        base_currency = Currency.objects.get(multiplicity=1)
+        if sender_account.currency == base_currency:
+            return self.convert_from_base_currency()
+        if recipient_account.currency == base_currency:
+            return self.convert_to_base_currency()
+        return self.convert_between_currencies()
+
     def convert_from_base_currency(self):
         pass
 
