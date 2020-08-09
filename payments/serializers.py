@@ -99,6 +99,9 @@ class PaymentTransactionSerializer(serializers.ModelSerializer):
         recipient_account = self.validated_data['recipient_account']
         transfer_amount = self.validated_data['transfer_amount']
 
+        if sender_account.currency == recipient_account.currency:
+            return transfer_amount
+
     def convert_from_base_currency(self):
         pass
 
