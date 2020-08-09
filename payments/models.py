@@ -103,3 +103,6 @@ class UserTransactionHistory(AutoDateMixin, models.Model):
     class Meta:
         verbose_name = 'История операций'
         verbose_name_plural = 'История операций'
+
+    def __str__(self):
+        return f'{self.user} ({self.payment_type})'
