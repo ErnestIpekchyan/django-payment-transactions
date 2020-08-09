@@ -27,7 +27,7 @@ class AccountCurrency(AutoDateMixin, models.Model):
     RUB = 'rub'
     BTC = 'btc'
 
-    CURRENCY_CHOICES = [
+    CURRENCY_TYPE_CHOICES = [
         (EUR, 'eur'),
         (USD, 'usd'),
         (GPB, 'gpb'),
