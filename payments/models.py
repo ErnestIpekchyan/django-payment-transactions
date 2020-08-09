@@ -42,6 +42,7 @@ class AccountCurrency(AutoDateMixin, models.Model):
         related_name='currencies',
     )
     currency_type = models.CharField('Тип валюты', max_length=3, choices=CURRENCY_TYPE_CHOICES)
+    balance_amount = models.IntegerField('Сумма баланса', default=0)
 
     class Meta:
         verbose_name = 'Валюта счета'
