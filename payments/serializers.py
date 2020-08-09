@@ -1,5 +1,6 @@
 from django.db import transaction
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from payments.models import User, AccountCurrency, UserTransactionHistory, PaymentTransaction
 
@@ -47,3 +48,8 @@ class PaymentTransactionSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         pass
+
+    def validate_sender_account(self, sender_account):
+        request = self.context['request']
+        if sender_account.user != request.user:
+            raise ValidationError('Счет не принадлежит текущему пользователю')
