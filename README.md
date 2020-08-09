@@ -20,4 +20,9 @@ git clone https://github.com/ErnestIpekchyan/django-payment-transactions.git
 pip install -r requirements.txt
 ```
 
-- Add `.env` file into project directory and override default settings if needed
+- Add `.env` file into project directory and override default settings if needed.  
+For example:
+```.env
+DEBUG=True
+SECRET_KEY="****"
+```
