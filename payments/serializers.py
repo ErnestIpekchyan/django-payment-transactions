@@ -49,7 +49,11 @@ class PaymentTransactionSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         pass
 
-    def validate_sender_account(self, sender_account):
+    def validate(self, attrs):
         request = self.context['request']
+
+        sender_account = attrs.get('sender_account')
         if sender_account.user != request.user:
             raise ValidationError('Счет не принадлежит текущему пользователю')
+
+        return attrs
