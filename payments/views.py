@@ -2,7 +2,8 @@ from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from payments.models import UserTransactionHistory, Currency
-from payments.serializers import UserRegistrationSerializer, UserTransactionHistorySerializer, CurrencySerializer
+from payments.serializers import (UserRegistrationSerializer, UserTransactionHistorySerializer, CurrencySerializer,
+                                  PaymentTransactionSerializer)
 
 
 class UserRegistrationAPIView(CreateAPIView):
@@ -20,3 +21,8 @@ class UserTransactionsAPIView(ListAPIView):
 class CurrencyApiView(ListAPIView):
     queryset = Currency.objects.all()
     serializer_class = CurrencySerializer
+
+
+class PaymentAPIView(CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = PaymentTransactionSerializer
