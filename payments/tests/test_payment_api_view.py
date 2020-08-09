@@ -9,7 +9,7 @@ from payments.models import Currency, User, AccountCurrency, UserTransactionHist
 class PaymentViewTest(APITestCase):
 
     def setUp(self):
-        self.base_currency = Currency(name='Рубль', symbol='руб.', multiplicity=1, rate=1)
+        self.base_currency = Currency.objects.create(name='Рубль', symbol='руб.', multiplicity=1, rate=1)
         self.url = reverse('payment_transfer')
 
     def register_user(self, email, currency, balance=0):
@@ -130,3 +130,35 @@ class PaymentViewTest(APITestCase):
         recipient_account.refresh_from_db()
         self.assertEqual(sender_account.balance_amount, Decimal('800'))
         self.assertEqual(recipient_account.balance_amount, Decimal('235.79'))
+
+    def test_payment_from_base_currency(self):
+        eur_currency = Currency.objects.create(name='Евро', symbol='€', multiplicity=100, rate=1.151)
+        sender = self.register_user('a@a.ru', self.base_currency, 1000)
+        recipient = self.register_user('b@b.ru', eur_currency)
+        sender_account = AccountCurrency.objects.get(user=sender, currency=self.base_currency)
+        recipient_account = AccountCurrency.objects.get(user=recipient, currency=eur_currency)
+
+        self.client.force_login(sender)
+        data = {
+            'sender_account': sender_account.id,
+            'recipient_account': recipient_account.id,
+            'transfer_amount': 200,
+        }
+        response = self.client.post(self.url, data=data)
+        self.assertEqual(response.status_code, 201)
+
+        debit_payment = UserTransactionHistory.objects.filter(
+            user=sender, payment_type=UserTransactionHistory.DEBIT,
+        )
+        add_payment = UserTransactionHistory.objects.filter(
+            user=recipient, payment_type=UserTransactionHistory.ADD,
+        )
+        self.assertTrue(debit_payment)
+        self.assertTrue(add_payment)
+        self.assertEqual(debit_payment.last().transfer_amount, 200)
+        self.assertEqual(add_payment.last().transfer_amount, Decimal('2.3'))
+
+        sender_account.refresh_from_db()
+        recipient_account.refresh_from_db()
+        self.assertEqual(sender_account.balance_amount, Decimal('800'))
+        self.assertEqual(recipient_account.balance_amount, Decimal('2.3'))
