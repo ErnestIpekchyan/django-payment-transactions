@@ -49,10 +49,18 @@ class CurrencySerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'symbol', 'multiplicity', 'rate']
 
 
+class PaymentTransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PaymentTransaction
+        fields = ['id', 'sender_account', 'recipient_account']
+
+
 class UserTransactionHistorySerializer(serializers.ModelSerializer):
+    payment = PaymentTransactionSerializer()
+
     class Meta:
         model = UserTransactionHistory
-        fields = ['id', 'payment', 'payment_type']
+        fields = ['id', 'payment', 'payment_type', 'transfer_amount']
 
 
 class PaymentTransactionCreateSerializer(serializers.ModelSerializer):
