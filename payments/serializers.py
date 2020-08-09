@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -54,7 +56,7 @@ class UserTransactionHistorySerializer(serializers.ModelSerializer):
 
 
 class PaymentTransactionSerializer(serializers.ModelSerializer):
-    transfer_amount = serializers.DecimalField(max_digits=10, decimal_places=2, min_value=0)
+    transfer_amount = serializers.DecimalField(max_digits=10, decimal_places=2, min_value=0, write_only=True)
 
     class Meta:
         model = PaymentTransaction
@@ -86,12 +88,14 @@ class PaymentTransactionSerializer(serializers.ModelSerializer):
             recipient_account.balance_amount += converted_sum
             recipient_account.save(update_fields=['balance_amount'])
 
+        return payment
+
     def validate(self, attrs):
         request = self.context['request']
 
         sender_account = attrs.get('sender_account')
         recipient_account = attrs.get('recipient_account')
-        transfer_amount = attrs.get['transfer_amount']
+        transfer_amount = attrs.get('transfer_amount')
 
         if sender_account.balance_amount <= 0:
             raise ValidationError('Баланс отрицательный. Невозможно выполнить перевод.')
@@ -121,18 +125,24 @@ class PaymentTransactionSerializer(serializers.ModelSerializer):
     def convert_from_base_currency(self):
         recipient_account = self.validated_data['recipient_account']
         transfer_amount = self.validated_data['transfer_amount']
-        return recipient_account.currency.rate * transfer_amount / recipient_account.currency.multiplicity
+
+        recipient_currency_rate = Decimal(recipient_account.currency.rate)
+        return recipient_currency_rate * transfer_amount / recipient_account.currency.multiplicity
 
     def convert_to_base_currency(self):
         sender_account = self.validated_data['sender_account']
         transfer_amount = self.validated_data['transfer_amount']
-        return transfer_amount * sender_account.currency.multiplicity / sender_account.currency.rate
+
+        sender_currency_rate = Decimal(sender_account.currency.rate)
+        return transfer_amount * sender_account.currency.multiplicity / sender_currency_rate
 
     def convert_between_currencies(self):
         sender_account = self.validated_data['sender_account']
         recipient_account = self.validated_data['recipient_account']
         transfer_amount = self.validated_data['transfer_amount']
 
-        dividend = transfer_amount * sender_account.currency.multiplicity * recipient_account.currency.rate
-        divider = recipient_account.currency.multiplicity * sender_account.currency.rate
+        sender_currency_rate = Decimal(sender_account.currency.rate)
+        recipient_currency_rate = Decimal(recipient_account.currency.rate)
+        dividend = transfer_amount * sender_account.currency.multiplicity * recipient_currency_rate
+        divider = recipient_account.currency.multiplicity * sender_currency_rate
         return dividend / divider
