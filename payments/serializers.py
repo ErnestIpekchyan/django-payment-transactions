@@ -70,6 +70,12 @@ class PaymentTransactionSerializer(serializers.ModelSerializer):
 
         sender_account = attrs.get('sender_account')
         recipient_account = attrs.get('recipient_account')
+        transfer_amount = attrs.get['transfer_amount']
+
+        if sender_account.balance_amount <= 0:
+            raise ValidationError('Баланс отрицательный. Невозможно выполнить перевод.')
+        if sender_account.balance_amount < transfer_amount:
+            raise ValidationError('Недостаточно средств для перевода')
         if sender_account == recipient_account:
             raise ValidationError('Нельзя совершить перевод на тот же счет')
         if sender_account.user != request.user:
