@@ -47,7 +47,9 @@ class PaymentTransactionSerializer(serializers.ModelSerializer):
         fields = ['id', 'sender_account', 'recipient_account', 'transfer_amount']
 
     def create(self, validated_data):
-        pass
+        request = self.context['request']
+        sender_account = validated_data['sender_account']
+        recipient_account = validated_data['recipient_account']
 
     def validate(self, attrs):
         request = self.context['request']
