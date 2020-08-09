@@ -41,6 +41,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return currency_id
 
 
+class CurrencySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Currency
+        fields = ['id', 'name', 'symbol', 'multiplicity', 'rate']
+
+
 class UserTransactionHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = UserTransactionHistory
