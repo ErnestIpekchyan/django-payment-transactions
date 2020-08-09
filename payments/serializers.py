@@ -5,8 +5,8 @@ from payments.models import User, AccountCurrency
 
 
 class UserSerializer(serializers.ModelSerializer):
-    currency_type = serializers.ChoiceField(choices=AccountCurrency.CURRENCY_TYPE_CHOICES)
-    balance_amount = serializers.IntegerField(min_value=0)
+    currency_type = serializers.ChoiceField(choices=AccountCurrency.CURRENCY_TYPE_CHOICES, write_only=True)
+    balance_amount = serializers.IntegerField(min_value=0, write_only=True)
 
     class Meta:
         model = User
