@@ -49,7 +49,19 @@ class CurrencySerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'symbol', 'multiplicity', 'rate']
 
 
+class AccountCurrencySerializer(serializers.ModelSerializer):
+    user_email = serializers.CharField(source='user.email')
+    currency = serializers.CharField(source='currency.name')
+
+    class Meta:
+        model = AccountCurrency
+        fields = ['id', 'user_email', 'currency']
+
+
 class PaymentTransactionSerializer(serializers.ModelSerializer):
+    sender_account = AccountCurrencySerializer()
+    recipient_account = AccountCurrencySerializer()
+
     class Meta:
         model = PaymentTransaction
         fields = ['id', 'sender_account', 'recipient_account']
