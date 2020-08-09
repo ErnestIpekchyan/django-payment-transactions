@@ -2,11 +2,11 @@ from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from payments.models import User, AccountCurrency, UserTransactionHistory, PaymentTransaction
+from payments.models import User, AccountCurrency, UserTransactionHistory, PaymentTransaction, Currency
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    currency_type = serializers.ChoiceField(choices=AccountCurrency.CURRENCY_TYPE_CHOICES, write_only=True)
+    currency_id = serializers.IntegerField(min_value=0, write_only=True)
     balance_amount = serializers.IntegerField(min_value=0, write_only=True)
 
     class Meta:
@@ -33,6 +33,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
                 balance_amount=balance_amount,
             )
         return user
+
+    def validate_currency_id(self, currency_id):
+        currency = Currency.objects.filter(id=currency_id)
+        if not currency.exists():
+            raise ValidationError('Такой валюты не существует')
 
 
 class UserTransactionHistorySerializer(serializers.ModelSerializer):
