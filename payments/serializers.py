@@ -93,3 +93,17 @@ class PaymentTransactionSerializer(serializers.ModelSerializer):
         if sender_account.user != request.user:
             raise ValidationError('Счет не принадлежит текущему пользователю')
         return attrs
+
+    def convert_currency(self):
+        sender_account = self.validated_data['sender_account']
+        recipient_account = self.validated_data['recipient_account']
+        transfer_amount = self.validated_data['transfer_amount']
+
+    def convert_from_base_currency(self):
+        pass
+
+    def convert_to_base_currency(self):
+        pass
+
+    def convert_between_currencies(self):
+        pass
