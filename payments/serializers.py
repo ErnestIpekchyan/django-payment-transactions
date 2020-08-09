@@ -115,7 +115,9 @@ class PaymentTransactionSerializer(serializers.ModelSerializer):
         return recipient_account.currency.rate * transfer_amount / recipient_account.currency.multiplicity
 
     def convert_to_base_currency(self):
-        pass
+        sender_account = self.validated_data['sender_account']
+        transfer_amount = self.validated_data['transfer_amount']
+        return transfer_amount * sender_account.currency.multiplicity / sender_account.currency.rate
 
     def convert_between_currencies(self):
         pass
