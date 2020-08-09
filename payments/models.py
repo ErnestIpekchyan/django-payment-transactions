@@ -21,6 +21,20 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class AccountCurrency(AutoDateMixin, models.Model):
+    EUR = 'eur'
+    USD = 'usd'
+    GPB = 'gpb'
+    RUB = 'rub'
+    BTC = 'btc'
+
+    CURRENCY_CHOICES = [
+        (EUR, 'eur'),
+        (USD, 'usd'),
+        (GPB, 'gpb'),
+        (RUB, 'rub'),
+        (BTC, 'btc'),
+    ]
+
     user = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
