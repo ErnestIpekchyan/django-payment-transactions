@@ -53,7 +53,9 @@ class PaymentTransactionSerializer(serializers.ModelSerializer):
         request = self.context['request']
 
         sender_account = attrs.get('sender_account')
+        recipient_account = attrs.get('recipient_account')
+        if sender_account == recipient_account:
+            raise ValidationError('Нельзя совершить перевод на тот же счет')
         if sender_account.user != request.user:
             raise ValidationError('Счет не принадлежит текущему пользователю')
-
         return attrs
