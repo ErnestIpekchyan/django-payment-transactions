@@ -3,6 +3,7 @@ from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 
 from common_mixins.model_mixins import AutoDateMixin
+from payments.managers import UserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -10,6 +11,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField('Имя', max_length=150, blank=True)
     last_name = models.CharField('Фамилия', max_length=150, blank=True)
 
+    objects = UserManager()
     USERNAME_FIELD = 'email'
 
     class Meta:
