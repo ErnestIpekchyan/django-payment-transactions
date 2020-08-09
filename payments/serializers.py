@@ -7,7 +7,7 @@ from payments.models import User, AccountCurrency, UserTransactionHistory, Payme
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     currency_id = serializers.IntegerField(min_value=0, write_only=True)
-    balance_amount = serializers.IntegerField(min_value=0, write_only=True)
+    balance_amount = serializers.DecimalField(max_digits=10, decimal_places=2, write_only=True, min_value=0)
 
     class Meta:
         model = User
