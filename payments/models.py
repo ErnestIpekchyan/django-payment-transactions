@@ -70,3 +70,6 @@ class PaymentTransaction(AutoDateMixin, models.Model):
     class Meta:
         verbose_name = 'Платежная транзакция'
         verbose_name_plural = 'Платежные транзакции'
+
+    def __str__(self):
+        return f'From {self.sender_account} to {self.recipient_account} - {self.dt_created}'
