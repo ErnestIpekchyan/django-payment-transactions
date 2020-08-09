@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from payments.models import UserTransactionHistory, Currency
 from payments.serializers import (UserRegistrationSerializer, UserTransactionHistorySerializer, CurrencySerializer,
-                                  PaymentTransactionSerializer)
+                                  PaymentTransactionCreateSerializer)
 
 
 class UserRegistrationAPIView(CreateAPIView):
@@ -25,4 +25,4 @@ class CurrencyApiView(ListAPIView):
 
 class PaymentAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = PaymentTransactionSerializer
+    serializer_class = PaymentTransactionCreateSerializer

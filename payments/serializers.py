@@ -55,7 +55,7 @@ class UserTransactionHistorySerializer(serializers.ModelSerializer):
         fields = ['id', 'payment', 'payment_type']
 
 
-class PaymentTransactionSerializer(serializers.ModelSerializer):
+class PaymentTransactionCreateSerializer(serializers.ModelSerializer):
     transfer_amount = serializers.DecimalField(max_digits=10, decimal_places=2, min_value=0)
     converted_sum = serializers.DecimalField(max_digits=10, decimal_places=2, min_value=0, read_only=True)
 
