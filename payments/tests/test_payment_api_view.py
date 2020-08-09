@@ -77,3 +77,21 @@ class PaymentViewTest(APITestCase):
         response = self.client.post(self.url, data=data)
         result_data = {'non_field_errors': ['Нельзя совершить перевод на тот же счет']}
         self.assertEqual(response.json(), result_data)
+
+    def test_payment_from_wrong_account(self):
+        usd_currency = Currency.objects.create(name='Евро', symbol='€', multiplicity=100, rate=1.151)
+        eur_currency = Currency.objects.create(name='Доллар', symbol='$', multiplicity=100, rate=1.357)
+        sender = self.register_user('a@a.ru', usd_currency)
+        recipient = self.register_user('b@b.ru', eur_currency, 1000)
+        sender_account = AccountCurrency.objects.get(user=sender, currency=usd_currency)
+        recipient_account = AccountCurrency.objects.get(user=recipient, currency=eur_currency)
+
+        self.client.force_login(sender)
+        data = {
+            'sender_account': recipient_account.id,
+            'recipient_account': sender_account.id,
+            'transfer_amount': 200,
+        }
+        response = self.client.post(self.url, data=data)
+        result_data = {'non_field_errors': ['Счет не принадлежит текущему пользователю']}
+        self.assertEqual(response.json(), result_data)
