@@ -61,20 +61,27 @@ class PaymentTransactionSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         sender_account = validated_data['sender_account']
         recipient_account = validated_data['recipient_account']
-        transfer_amount = validated_data['transfer_amount']
+        transfer_amount = validated_data.pop('transfer_amount')
+        converted_sum = self.convert_currency()
 
         with transaction.atomic():
             payment = PaymentTransaction.objects.create(**validated_data)
             UserTransactionHistory.objects.create(
-                user=sender_account.user, payment=payment, payment_type=UserTransactionHistory.DEBIT,
+                user=sender_account.user,
+                payment=payment,
+                payment_type=UserTransactionHistory.DEBIT,
+                transfer_amount=transfer_amount,
             )
             UserTransactionHistory.objects.create(
-                user=recipient_account.user, payment=payment, payment_type=UserTransactionHistory.ADD,
+                user=recipient_account.user,
+                payment=payment,
+                payment_type=UserTransactionHistory.ADD,
+                transfer_amount=converted_sum,
             )
 
             sender_account.balance_amount -= transfer_amount
             sender_account.save(update_fields=['balance_amount'])
-            recipient_account.balance_amount += self.convert_currency()
+            recipient_account.balance_amount += converted_sum
             recipient_account.save(update_fields=['balance_amount'])
 
     def validate(self, attrs):
