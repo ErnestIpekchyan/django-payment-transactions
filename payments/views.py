@@ -1,7 +1,7 @@
 from rest_framework.generics import CreateAPIView
 
-from payments.serializers import UserSerializer
+from payments.serializers import UserRegistrationSerializer
 
 
 class UserRegistrationAPIView(CreateAPIView):
-    serializer_class = UserSerializer
+    serializer_class = UserRegistrationSerializer
