@@ -118,6 +118,7 @@ class UserTransactionHistory(AutoDateMixin, models.Model):
         related_name='participants',
     )
     payment_type = models.CharField('Тип перевода', max_length=5, choices=PAYMENT_TYPE_CHOICES)
+    transfer_amount = models.DecimalField('Сумма перевода', max_digits=10, decimal_places=2)
 
     class Meta:
         verbose_name = 'История операций'
