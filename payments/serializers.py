@@ -56,20 +56,24 @@ class UserTransactionHistorySerializer(serializers.ModelSerializer):
 
 
 class PaymentTransactionSerializer(serializers.ModelSerializer):
-    transfer_amount = serializers.DecimalField(max_digits=10, decimal_places=2, min_value=0, write_only=True)
+    transfer_amount = serializers.DecimalField(max_digits=10, decimal_places=2, min_value=0)
+    converted_sum = serializers.DecimalField(max_digits=10, decimal_places=2, min_value=0, read_only=True)
 
     class Meta:
         model = PaymentTransaction
-        fields = ['id', 'sender_account', 'recipient_account', 'transfer_amount']
+        fields = ['id', 'sender_account', 'recipient_account', 'transfer_amount', 'converted_sum']
 
     def create(self, validated_data):
         sender_account = validated_data['sender_account']
         recipient_account = validated_data['recipient_account']
-        transfer_amount = validated_data.pop('transfer_amount')
+        transfer_amount = validated_data['transfer_amount']
         converted_sum = self.convert_currency()
 
         with transaction.atomic():
-            payment = PaymentTransaction.objects.create(**validated_data)
+            payment = PaymentTransaction.objects.create(
+                sender_account=validated_data['sender_account'],
+                recipient_account=validated_data['recipient_account'],
+            )
             UserTransactionHistory.objects.create(
                 user=sender_account.user,
                 payment=payment,
@@ -88,7 +92,9 @@ class PaymentTransactionSerializer(serializers.ModelSerializer):
             recipient_account.balance_amount += converted_sum
             recipient_account.save(update_fields=['balance_amount'])
 
-        return payment
+        result_data = validated_data.copy()
+        result_data['converted_sum'] = converted_sum
+        return result_data
 
     def validate(self, attrs):
         request = self.context['request']
