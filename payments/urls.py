@@ -4,5 +4,5 @@ from payments.views import UserRegistrationAPIView, UserTransactionsAPIView
 
 urlpatterns = [
     path('users/register/', UserRegistrationAPIView.as_view(), name='registration'),
-    path('users/<int:user_id>/transactions/', UserTransactionsAPIView.as_view(), name='user_transactions'),
+    path('transactions/', UserTransactionsAPIView.as_view(), name='user_transactions'),
 ]
