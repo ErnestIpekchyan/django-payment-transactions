@@ -43,7 +43,7 @@ class UserTransactionHistorySerializer(serializers.ModelSerializer):
 class PaymentTransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaymentTransaction
-        fields = ['id', 'recipient_account', 'transfer_amount']
+        fields = ['id', 'sender_account', 'recipient_account', 'transfer_amount']
 
     def create(self, validated_data):
         pass
