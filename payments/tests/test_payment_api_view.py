@@ -10,13 +10,13 @@ class PaymentViewTest(APITestCase):
         self.base_currency = Currency(name='Рубль', symbol='руб.', multiplicity=1, rate=1)
         self.url = reverse('payment_transfer')
 
-    def register_user(self, email, currency):
+    def register_user(self, email, currency, balance=0):
         data = {
             'email': email,
             'password': '1234',
             'first_name': 'Test',
             'currency_id': currency.id,
-            'balance_amount': 20,
+            'balance_amount': balance,
         }
         self.client.post(reverse('registration'), data=data)
         return User.objects.get(email=email)
@@ -28,6 +28,24 @@ class PaymentViewTest(APITestCase):
         self.assertEqual(response.json(), result_data)
 
     def test_payment_without_money(self):
+        usd_currency = Currency.objects.create(name='Евро', symbol='€', multiplicity=100, rate=1.151)
+        eur_currency = Currency.objects.create(name='Доллар', symbol='$', multiplicity=100, rate=1.357)
+        sender = self.register_user('a@a.ru', usd_currency, 20)
+        recipient = self.register_user('b@b.ru', eur_currency)
+        sender_account = AccountCurrency.objects.get(user=sender, currency=usd_currency)
+        recipient_account = AccountCurrency.objects.get(user=recipient, currency=eur_currency)
+
+        self.client.force_login(sender)
+        data = {
+            'sender_account': sender_account.id,
+            'recipient_account': recipient_account.id,
+            'transfer_amount': 200,
+        }
+        response = self.client.post(self.url, data=data)
+        result_data = {'non_field_errors': ['Недостаточно средств для перевода']}
+        self.assertEqual(response.json(), result_data)
+
+    def test_payment_with_negative_balance(self):
         usd_currency = Currency.objects.create(name='Евро', symbol='€', multiplicity=100, rate=1.151)
         eur_currency = Currency.objects.create(name='Доллар', symbol='$', multiplicity=100, rate=1.357)
         sender = self.register_user('a@a.ru', usd_currency)
@@ -42,5 +60,5 @@ class PaymentViewTest(APITestCase):
             'transfer_amount': 200,
         }
         response = self.client.post(self.url, data=data)
-        result_data = {'non_field_errors': ['Недостаточно средств для перевода']}
+        result_data = {'non_field_errors': ['Баланс отрицательный. Невозможно выполнить перевод.']}
         self.assertEqual(response.json(), result_data)
