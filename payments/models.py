@@ -50,6 +50,20 @@ class AccountCurrency(AutoDateMixin, models.Model):
 
 
 class PaymentTransaction(AutoDateMixin, models.Model):
+    sender_account = models.ForeignKey(
+        AccountCurrency,
+        on_delete=models.PROTECT,
+        verbose_name='Счет отправителя',
+        related_name='sent_transactions',
+    )
+    recipient_account = models.ForeignKey(
+        AccountCurrency,
+        on_delete=models.PROTECT,
+        verbose_name='Счет получателя',
+        related_name='received_transactions',
+    )
+    transfer_amount = models.PositiveIntegerField('Сумма перевода')
+
     class Meta:
         verbose_name = 'Платежная транзакция'
         verbose_name_plural = 'Платежные транзакции'
