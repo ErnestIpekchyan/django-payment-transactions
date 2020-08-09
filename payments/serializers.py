@@ -22,14 +22,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        currency_type = validated_data.pop('currency_type')
+        currency_id = validated_data.pop('currency_id')
         balance_amount = validated_data.pop('balance_amount')
 
         with transaction.atomic():
             user = User.objects.create_user(**validated_data)
             AccountCurrency.objects.create(
                 user=user,
-                currency_type=currency_type,
+                currency_id=currency_id,
                 balance_amount=balance_amount,
             )
         return user
