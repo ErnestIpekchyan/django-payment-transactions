@@ -14,5 +14,4 @@ class UserTransactionsAPIView(ListCreateAPIView):
     serializer_class = UserTransactionHistorySerializer
 
     def get_queryset(self):
-        user_id = self.kwargs['user_id']
-        return UserTransactionHistory.objects.filter(user_id=user_id)
+        return UserTransactionHistory.objects.filter(user=self.request.user)
