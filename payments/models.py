@@ -2,6 +2,8 @@ from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 
+from common_mixins.model_mixins import AutoDateMixin
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField('Email', unique=True)
@@ -18,13 +20,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-class AccountCurrency(models.Model):
+class AccountCurrency(AutoDateMixin, models.Model):
     class Meta:
         verbose_name = 'Валюта счета'
         verbose_name_plural = 'Валюты счетов'
 
 
-class PaymentTransaction(models.Model):
+class PaymentTransaction(AutoDateMixin, models.Model):
     class Meta:
         verbose_name = 'Платежная транзакция'
         verbose_name_plural = 'Платежные транзакции'
