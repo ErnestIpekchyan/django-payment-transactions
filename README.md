@@ -28,3 +28,30 @@ SECRET_KEY="****"
 ```
 
 - Run server and use API
+
+# Usage
+
+- URL for register user (`POST` request):
+
+```
+/users/register/
+```
+
+- URL for get user transactions (`GET` request):
+
+```
+/users/transactions/
+```
+
+- URL for transfer money between accounts (`POST` request):
+
+```
+/users/payments/transfer/
+```
+
+# Testing
+Run tests with the following command:
+
+```
+python manage.py test --nomigrations
+```
