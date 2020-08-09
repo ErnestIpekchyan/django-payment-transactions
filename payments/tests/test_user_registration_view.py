@@ -27,4 +27,14 @@ class UserRegistrationViewTest(APITestCase):
         self.assertTrue(account_currency)
 
     def test_registration_with_wrong_currency(self):
-        pass
+        data = {
+            'email': 'a@a.ru',
+            'password': '1234',
+            'first_name': 'Test',
+            'currency_id': self.currency.id + 1,
+            'balance_amount': 20,
+        }
+        response = self.client.post(self.url, data=data)
+
+        result_data = {'currency_id': ['Такой валюты не существует']}
+        self.assertEqual(response.json(), result_data)
