@@ -1,7 +1,7 @@
 from django.db import transaction
 from rest_framework import serializers
 
-from payments.models import User, AccountCurrency, UserTransactionHistory
+from payments.models import User, AccountCurrency, UserTransactionHistory, PaymentTransaction
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -38,3 +38,9 @@ class UserTransactionHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = UserTransactionHistory
         fields = ['id', 'payment', 'payment_type']
+
+
+class PaymentTransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PaymentTransaction
+        fields = ['id', 'recipient_account', 'transfer_amount']
