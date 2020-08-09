@@ -16,3 +16,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+class AccountCurrency(models.Model):
+    class Meta:
+        verbose_name = 'Валюта счета'
+        verbose_name_plural = 'Валюты счетов'
+
+
+class PaymentTransaction(models.Model):
+    class Meta:
+        verbose_name = 'Платежная транзакция'
+        verbose_name_plural = 'Платежные транзакции'
