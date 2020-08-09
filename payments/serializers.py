@@ -44,3 +44,6 @@ class PaymentTransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaymentTransaction
         fields = ['id', 'recipient_account', 'transfer_amount']
+
+    def create(self, validated_data):
+        pass
