@@ -75,3 +75,27 @@ class PaymentTransaction(AutoDateMixin, models.Model):
 
     def __str__(self):
         return f'From {self.sender_account} to {self.recipient_account} - {self.dt_created}'
+
+
+class UserTransactionHistory(AutoDateMixin, models.Model):
+    ADD = 'add'
+    DEBIT = 'debit'
+
+    PAYMENT_TYPE_CHOICES = [
+        (ADD, 'Пополнение'),
+        (DEBIT, 'Списание'),
+    ]
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        verbose_name='Пользователь',
+        related_name='transactions',
+    )
+    payment = models.ForeignKey(
+        PaymentTransaction,
+        on_delete=models.PROTECT,
+        verbose_name='Платежная транзакция',
+        related_name='participants',
+    )
+    payment_type = models.CharField('Тип перевода', max_length=5, choices=PAYMENT_TYPE_CHOICES)
