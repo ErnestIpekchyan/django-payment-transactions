@@ -54,6 +54,8 @@ class UserTransactionHistorySerializer(serializers.ModelSerializer):
 
 
 class PaymentTransactionSerializer(serializers.ModelSerializer):
+    transfer_amount = serializers.DecimalField(max_digits=10, decimal_places=2)
+
     class Meta:
         model = PaymentTransaction
         fields = ['id', 'sender_account', 'recipient_account', 'transfer_amount']
