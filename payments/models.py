@@ -48,6 +48,9 @@ class AccountCurrency(AutoDateMixin, models.Model):
         verbose_name = 'Валюта счета'
         verbose_name_plural = 'Валюты счетов'
 
+    def __str__(self):
+        return f'{self.user} ({self.currency_type})'
+
 
 class PaymentTransaction(AutoDateMixin, models.Model):
     sender_account = models.ForeignKey(
