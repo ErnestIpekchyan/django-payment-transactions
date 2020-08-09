@@ -30,12 +30,12 @@ class PaymentViewTest(APITestCase):
         self.assertEqual(response.json(), result_data)
 
     def test_payment_without_money(self):
-        usd_currency = Currency.objects.create(name='Евро', symbol='€', multiplicity=100, rate=1.151)
-        eur_currency = Currency.objects.create(name='Доллар', symbol='$', multiplicity=100, rate=1.357)
-        sender = self.register_user('a@a.ru', usd_currency, 20)
-        recipient = self.register_user('b@b.ru', eur_currency)
-        sender_account = AccountCurrency.objects.get(user=sender, currency=usd_currency)
-        recipient_account = AccountCurrency.objects.get(user=recipient, currency=eur_currency)
+        eur_currency = Currency.objects.create(name='Евро', symbol='€', multiplicity=100, rate=1.151)
+        usd_currency = Currency.objects.create(name='Доллар', symbol='$', multiplicity=100, rate=1.357)
+        sender = self.register_user('a@a.ru', eur_currency, 20)
+        recipient = self.register_user('b@b.ru', usd_currency)
+        sender_account = AccountCurrency.objects.get(user=sender, currency=eur_currency)
+        recipient_account = AccountCurrency.objects.get(user=recipient, currency=usd_currency)
 
         self.client.force_login(sender)
         data = {
@@ -48,12 +48,12 @@ class PaymentViewTest(APITestCase):
         self.assertEqual(response.json(), result_data)
 
     def test_payment_with_negative_balance(self):
-        usd_currency = Currency.objects.create(name='Евро', symbol='€', multiplicity=100, rate=1.151)
-        eur_currency = Currency.objects.create(name='Доллар', symbol='$', multiplicity=100, rate=1.357)
-        sender = self.register_user('a@a.ru', usd_currency)
-        recipient = self.register_user('b@b.ru', eur_currency)
-        sender_account = AccountCurrency.objects.get(user=sender, currency=usd_currency)
-        recipient_account = AccountCurrency.objects.get(user=recipient, currency=eur_currency)
+        eur_currency = Currency.objects.create(name='Евро', symbol='€', multiplicity=100, rate=1.151)
+        usd_currency = Currency.objects.create(name='Доллар', symbol='$', multiplicity=100, rate=1.357)
+        sender = self.register_user('a@a.ru', eur_currency)
+        recipient = self.register_user('b@b.ru', usd_currency)
+        sender_account = AccountCurrency.objects.get(user=sender, currency=eur_currency)
+        recipient_account = AccountCurrency.objects.get(user=recipient, currency=usd_currency)
 
         self.client.force_login(sender)
         data = {
@@ -66,9 +66,9 @@ class PaymentViewTest(APITestCase):
         self.assertEqual(response.json(), result_data)
 
     def test_payment_to_same_account(self):
-        usd_currency = Currency.objects.create(name='Евро', symbol='€', multiplicity=100, rate=1.151)
-        sender = self.register_user('a@a.ru', usd_currency, 1000)
-        sender_account = AccountCurrency.objects.get(user=sender, currency=usd_currency)
+        eur_currency = Currency.objects.create(name='Евро', symbol='€', multiplicity=100, rate=1.151)
+        sender = self.register_user('a@a.ru', eur_currency, 1000)
+        sender_account = AccountCurrency.objects.get(user=sender, currency=eur_currency)
 
         self.client.force_login(sender)
         data = {
@@ -81,12 +81,12 @@ class PaymentViewTest(APITestCase):
         self.assertEqual(response.json(), result_data)
 
     def test_payment_from_wrong_account(self):
-        usd_currency = Currency.objects.create(name='Евро', symbol='€', multiplicity=100, rate=1.151)
-        eur_currency = Currency.objects.create(name='Доллар', symbol='$', multiplicity=100, rate=1.357)
-        sender = self.register_user('a@a.ru', usd_currency)
-        recipient = self.register_user('b@b.ru', eur_currency, 1000)
-        sender_account = AccountCurrency.objects.get(user=sender, currency=usd_currency)
-        recipient_account = AccountCurrency.objects.get(user=recipient, currency=eur_currency)
+        eur_currency = Currency.objects.create(name='Евро', symbol='€', multiplicity=100, rate=1.151)
+        usd_currency = Currency.objects.create(name='Доллар', symbol='$', multiplicity=100, rate=1.357)
+        sender = self.register_user('a@a.ru', eur_currency)
+        recipient = self.register_user('b@b.ru', usd_currency, 1000)
+        sender_account = AccountCurrency.objects.get(user=sender, currency=eur_currency)
+        recipient_account = AccountCurrency.objects.get(user=recipient, currency=usd_currency)
 
         self.client.force_login(sender)
         data = {
@@ -99,12 +99,12 @@ class PaymentViewTest(APITestCase):
         self.assertEqual(response.json(), result_data)
 
     def test_payment_from_usd_to_eur(self):
-        usd_currency = Currency.objects.create(name='Евро', symbol='€', multiplicity=100, rate=1.151)
-        eur_currency = Currency.objects.create(name='Доллар', symbol='$', multiplicity=100, rate=1.357)
-        sender = self.register_user('a@a.ru', usd_currency, 1000)
-        recipient = self.register_user('b@b.ru', eur_currency)
-        sender_account = AccountCurrency.objects.get(user=sender, currency=usd_currency)
-        recipient_account = AccountCurrency.objects.get(user=recipient, currency=eur_currency)
+        eur_currency = Currency.objects.create(name='Евро', symbol='€', multiplicity=100, rate=1.151)
+        usd_currency = Currency.objects.create(name='Доллар', symbol='$', multiplicity=100, rate=1.357)
+        sender = self.register_user('a@a.ru', eur_currency, 1000)
+        recipient = self.register_user('b@b.ru', usd_currency)
+        sender_account = AccountCurrency.objects.get(user=sender, currency=eur_currency)
+        recipient_account = AccountCurrency.objects.get(user=recipient, currency=usd_currency)
 
         self.client.force_login(sender)
         data = {
