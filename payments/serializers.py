@@ -54,7 +54,7 @@ class UserTransactionHistorySerializer(serializers.ModelSerializer):
 
 
 class PaymentTransactionSerializer(serializers.ModelSerializer):
-    transfer_amount = serializers.DecimalField(max_digits=10, decimal_places=2)
+    transfer_amount = serializers.DecimalField(max_digits=10, decimal_places=2, min_value=0)
 
     class Meta:
         model = PaymentTransaction
