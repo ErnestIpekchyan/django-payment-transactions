@@ -26,3 +26,5 @@ For example:
 DEBUG=True
 SECRET_KEY="****"
 ```
+
+- Run server and use API
