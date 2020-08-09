@@ -22,6 +22,34 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
+class Currency(AutoDateMixin, models.Model):
+    EUR = '€'
+    USD = '$'
+    GPB = '£'
+    RUB = 'руб.'
+    BTC = '₿'
+
+    SYMBOL_CHOICES = [
+        (EUR, '€'),
+        (USD, '$'),
+        (GPB, '£'),
+        (RUB, 'руб.'),
+        (BTC, '₿'),
+    ]
+
+    name = models.CharField('Название', max_length=30)
+    symbol = models.CharField('Символ', max_length=5, choices=SYMBOL_CHOICES)
+    multiplicity = models.PositiveIntegerField('Кратность')
+    rate = models.FloatField('Курс')
+
+    class Meta:
+        verbose_name = 'Валюта'
+        verbose_name_plural = 'Валюты'
+
+    def __str__(self):
+        return self.name
+
+
 class AccountCurrency(AutoDateMixin, models.Model):
     EUR = 'eur'
     USD = 'usd'
@@ -52,15 +80,6 @@ class AccountCurrency(AutoDateMixin, models.Model):
 
     def __str__(self):
         return f'{self.user} ({self.currency_type})'
-
-
-class Currency(models.Model):
-    class Meta:
-        verbose_name = 'Валюта'
-        verbose_name_plural = 'Валюты'
-
-    def __str__(self):
-        return ''
 
 
 class PaymentTransaction(AutoDateMixin, models.Model):
