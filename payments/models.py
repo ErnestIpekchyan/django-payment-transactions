@@ -51,20 +51,6 @@ class Currency(AutoDateMixin, models.Model):
 
 
 class AccountCurrency(AutoDateMixin, models.Model):
-    EUR = 'eur'
-    USD = 'usd'
-    GPB = 'gpb'
-    RUB = 'rub'
-    BTC = 'btc'
-
-    CURRENCY_TYPE_CHOICES = [
-        (EUR, 'eur'),
-        (USD, 'usd'),
-        (GPB, 'gpb'),
-        (RUB, 'rub'),
-        (BTC, 'btc'),
-    ]
-
     user = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
@@ -77,7 +63,6 @@ class AccountCurrency(AutoDateMixin, models.Model):
         verbose_name='Валюта',
         related_name='accounts',
     )
-    currency_type = models.CharField('Тип валюты', max_length=3, choices=CURRENCY_TYPE_CHOICES, null=True)
     balance_amount = models.IntegerField('Сумма баланса', default=0)
 
     class Meta:
@@ -85,7 +70,7 @@ class AccountCurrency(AutoDateMixin, models.Model):
         verbose_name_plural = 'Валюты счетов'
 
     def __str__(self):
-        return f'{self.user} ({self.currency_type})'
+        return f'{self.user} ({self.currency.name})'
 
 
 class PaymentTransaction(AutoDateMixin, models.Model):
