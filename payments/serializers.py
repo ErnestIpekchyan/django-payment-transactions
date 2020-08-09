@@ -47,18 +47,23 @@ class PaymentTransactionSerializer(serializers.ModelSerializer):
         fields = ['id', 'sender_account', 'recipient_account', 'transfer_amount']
 
     def create(self, validated_data):
-        request = self.context['request']
+        sender_account = validated_data['sender_account']
+        recipient_account = validated_data['recipient_account']
+        transfer_amount = validated_data['transfer_amount']
 
         with transaction.atomic():
             payment = PaymentTransaction.objects.create(**validated_data)
             UserTransactionHistory.objects.create(
-                user=request.user, payment=payment, payment_type=UserTransactionHistory.DEBIT,
+                user=sender_account.user, payment=payment, payment_type=UserTransactionHistory.DEBIT,
             )
-
-            recipient_account = validated_data['recipient_account']
             UserTransactionHistory.objects.create(
                 user=recipient_account.user, payment=payment, payment_type=UserTransactionHistory.ADD,
             )
+
+            sender_account.balance_amount -= transfer_amount
+            sender_account.save(update_fields=['balance_amount'])
+            recipient_account.balance_amount += transfer_amount
+            recipient_account.save(update_fields=['balance_amount'])
 
     def validate(self, attrs):
         request = self.context['request']
