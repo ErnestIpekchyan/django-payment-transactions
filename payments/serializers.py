@@ -74,7 +74,7 @@ class PaymentTransactionSerializer(serializers.ModelSerializer):
 
             sender_account.balance_amount -= transfer_amount
             sender_account.save(update_fields=['balance_amount'])
-            recipient_account.balance_amount += transfer_amount
+            recipient_account.balance_amount += self.convert_currency()
             recipient_account.save(update_fields=['balance_amount'])
 
     def validate(self, attrs):
