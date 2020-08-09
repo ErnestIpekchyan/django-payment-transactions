@@ -21,6 +21,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class AccountCurrency(AutoDateMixin, models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        verbose_name='Пользователь',
+        related_name='currencies',
+    )
+
     class Meta:
         verbose_name = 'Валюта счета'
         verbose_name_plural = 'Валюты счетов'
