@@ -17,8 +17,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             'password',
             'first_name',
             'last_name',
-            'currency_type',
             'balance_amount',
+            'currency_id',
         ]
 
     def create(self, validated_data):
@@ -38,6 +38,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         currency = Currency.objects.filter(id=currency_id)
         if not currency.exists():
             raise ValidationError('Такой валюты не существует')
+        return currency_id
 
 
 class UserTransactionHistorySerializer(serializers.ModelSerializer):
