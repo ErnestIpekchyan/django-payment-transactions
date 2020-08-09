@@ -86,7 +86,6 @@ class PaymentTransaction(AutoDateMixin, models.Model):
         verbose_name='Счет получателя',
         related_name='received_transactions',
     )
-    transfer_amount = models.PositiveIntegerField('Сумма перевода')
 
     class Meta:
         verbose_name = 'Платежная транзакция'
