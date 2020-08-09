@@ -63,7 +63,12 @@ class AccountCurrency(AutoDateMixin, models.Model):
         verbose_name='Валюта',
         related_name='accounts',
     )
-    balance_amount = models.IntegerField('Сумма баланса', default=0)
+    balance_amount = models.DecimalField(
+        'Сумма баланса',
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+    )
 
     class Meta:
         verbose_name = 'Валюта счета'
