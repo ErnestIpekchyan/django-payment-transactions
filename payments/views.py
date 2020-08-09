@@ -1,4 +1,4 @@
-from rest_framework.generics import CreateAPIView, ListCreateAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from payments.models import UserTransactionHistory
@@ -9,7 +9,7 @@ class UserRegistrationAPIView(CreateAPIView):
     serializer_class = UserRegistrationSerializer
 
 
-class UserTransactionsAPIView(ListCreateAPIView):
+class UserTransactionsAPIView(ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = UserTransactionHistorySerializer
 
