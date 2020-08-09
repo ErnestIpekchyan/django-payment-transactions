@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework import serializers
 
 from payments.models import User, AccountCurrency
@@ -20,5 +21,14 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
+        currency_type = validated_data.pop('currency_type')
+        balance_amount = validated_data.pop('balance_amount')
+
+        with transaction.atomic():
+            user = User.objects.create_user(**validated_data)
+            AccountCurrency.objects.create(
+                user=user,
+                currency_type=currency_type,
+                balance_amount=balance_amount,
+            )
         return user
