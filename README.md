@@ -36,6 +36,17 @@ SECRET_KEY="****"
 ```
 /users/register/
 ```
+Параметры запроса:
+```
+{
+  "email': "a@a.ru",
+  "password": "1234",
+  "first_name": "Test",
+  "currency_id": <id_валюты>, # из модели Currency
+  "balance_amount": 20 # сумма начального баланса на счете
+}
+```
+В случае успешной регистрации возвращает 201 статус.
 
 - URL for get user transactions (`GET` request):
 
@@ -48,6 +59,16 @@ SECRET_KEY="****"
 ```
 /users/payments/transfer/
 ```
+
+Параметры запроса:
+```
+{
+  "sender_account": <id_счета_отправителя>, # из модели AccountCurrency (счет создается после регистрации юзера)
+  "recipient_account": <id_счета_получателя>, # из модели AccountCurrency
+  "transfer_amount": 200
+}
+```
+В случае успешного перевода возвращает 201 статус.
 
 # Testing
 Run tests with the following command:
